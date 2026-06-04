@@ -1,0 +1,169 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*   argv_env.h - 无bonus版本                                                */
+/*   去掉了: DOUBLE_Q, SINGLE_Q, PARENT_O, PARENT_C, THEN, ELSE, REDIR      */
+/*   去掉了: t_argv 中的 type 字段                                            */
+/*   去掉了: wildcard 相关结构体和函数                                         */
+/*   新增了: free_redir, is_redir_type, is_double_op                          */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef ARGV_ENV_H
+# define ARGV_ENV_H
+
+# include <stdio.h>
+# include <unistd.h>
+# include <stdlib.h>
+# include <readline/readline.h>
+# include <readline/history.h>
+# include <signal.h>
+# include <errno.h>
+
+# define RED		"\033[31m"
+# define GREEN		"\033[32m"
+# define YELLOW		"\033[33m"
+# define BLUE		"\033[34m"
+# define MAGENTA	"\033[35m"
+# define CYAN		"\033[36m"
+# define WHITE		"\033[37m"
+# define RESET		"\033[0m"
+
+/*
+** 精简后的 token 类型: 只有6种
+** WORD     = 普通词 (命令名、参数、文件名)
+** PIPE     = |
+** INPUT    = <
+** OUTPUT   = >
+** HEREDOC  = <<
+** APPEND   = >>
+*/
+typedef enum e_token_type
+{
+	WORD,
+	PIPE,
+	INPUT,
+	OUTPUT,
+	HEREDOC,
+	APPEND,
+}	t_token_type;
+
+/*
+** lexer 产出: 每个 token 一个节点
+*/
+typedef struct s_token
+{
+	t_token_type	type;
+	char			*value;
+	struct s_token	*next;
+}	t_token;
+
+/*
+** 重定向链表: 挂在 t_argv 的 redir 字段上
+** type = INPUT/OUTPUT/HEREDOC/APPEND
+** file = 目标文件名 (或 heredoc 分隔符)
+*/
+typedef struct s_redir
+{
+	t_token_type	type;
+	char			*file;
+	struct s_redir	*next;
+}	t_redir;
+
+/*
+** 一条简单命令 (管道之间的部分)
+** argv  = execve 需要的参数数组, 不含重定向
+** redir = 这条命令的重定向链表
+** argc  = argv 中参数的个数
+** next  = 管道右边的下一条命令
+*/
+typedef struct s_argv
+{
+	char			**argv;
+	t_redir			*redir;
+	int				argc;
+	struct s_argv	*next;
+}	t_argv;
+
+typedef struct s_env
+{
+	char	*last_dir;
+	char	**env;
+	int		cap;
+	int		size;
+	int		exit_s;
+}	t_env;
+
+//init_env.c
+size_t	ft_strlen(const char *str);
+char	*ft_strdup(char *s);
+int		init_env(t_env *env, char **envp);
+
+//lexer_helper.c
+int		is_operator(char *str);
+int		is_redir_type(t_token_type type);
+int		is_double_op(t_token_type type);
+int		token_len(char *str);
+char	*token_strndup(const char *s, int n);
+
+//lexer.c
+t_token	*make_token(char *str, t_token_type type);
+int		link_token(t_token **h, t_token **cur, t_token_type t, char *s);
+t_token	*lexer(char *line, t_env *env);
+
+//syntax_check.c
+int		precheck_line(char *line);
+int		is_op(t_token_type x);
+char	*syntax_check(t_token *token);
+int		syntax_error(char *line, t_token *token, t_env *env);
+
+//parser_helper.c
+int		count_cmd_argc(t_token *token);
+int		build_redirs(t_token *token, t_redir **head);
+int		build_argv_arr(t_argv *node, t_token *token);
+
+//parser.c
+t_argv	*parse_command(t_token **token);
+t_argv	*make_argv(t_token *token);
+int		build_argv(char *line, t_env *env, t_argv **out);
+
+//expander_helper_var.c
+char	*find_var(char *str, t_env *env);
+char	*var_join(char **str, char *add, int pos, int len);
+char	*replace_var_helper(char **str, int i, t_env *env);
+int		replace_var(char **str, char *add, int i, t_env *env);
+
+//expander.c
+int		expand_home(t_argv *curt, t_env *env);
+int		expander_helper(char **str, t_env *env);
+int		expander(t_argv *curt, t_env *env);
+int		expand_all(t_argv *curt, t_env *env);
+
+//rm_char.c
+int		check_q(char c, int *q_s, int *q_d);
+void	int_init(int *i, int n);
+void	rm_char_helper(char **str);
+void	rm_char(t_argv *curt);
+
+//trimmer.c
+void	trim_q(char **s);
+void	trim_quote(t_argv *curt);
+int		rm_empty(t_argv *curt, int i);
+int		trim_empty(t_argv *curt);
+
+//helper_itoa.c
+int		is_al(char c);
+int		get_len(int n);
+char	*ft_itoa(int n);
+
+//helper_free.c
+void	free_strstr(char **s);
+void	free_env(t_env *env);
+void	free_tokens(t_token *head);
+void	free_redir(t_redir *head);
+void	free_argv(t_argv *head);
+
+//sort_strs.c
+void	*ft_memcpy(void *dest, const void *src, size_t n);
+char	*ft_strjoin(char const *s1, char const *s2);
+
+#endif
