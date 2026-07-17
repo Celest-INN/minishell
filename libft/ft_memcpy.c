@@ -6,7 +6,7 @@
 /*   By: erzhuo <erzhuo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 18:34:34 by erzhuo            #+#    #+#             */
-/*   Updated: 2025/11/30 18:51:57 by erzhuo           ###   ########.fr       */
+/*   Updated: 2026/07/17 08:41:17 by erzhuo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	*ft_memcpy(void *dst, const void *src, size_t n)
 	while (n > 0)
 	{
 		n--;
-		((char *)dst)[n] = ((char *)src)[n];
+		((unsigned char *)dst)[n] = ((unsigned char *)src)[n];
 	}
 	return (dst);
 }

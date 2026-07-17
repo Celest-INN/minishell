@@ -1,10 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*   argv_env.h - 无bonus版本                                                */
-/*   去掉了: DOUBLE_Q, SINGLE_Q, PARENT_O, PARENT_C, THEN, ELSE, REDIR      */
-/*   去掉了: t_argv 中的 type 字段                                            */
-/*   去掉了: wildcard 相关结构体和函数                                         */
-/*   新增了: free_redir, is_redir_type, is_double_op                          */
+/*                                                        :::      ::::::::   */
+/*   argv_env.h                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: erzhuo <erzhuo@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/07/17 09:06:48 by erzhuo            #+#    #+#             */
+/*   Updated: 2026/07/17 09:07:35 by erzhuo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +20,7 @@
 # include <readline/history.h>
 # include <signal.h>
 # include <errno.h>
+# include "libft.h"
 
 # define RED		"\033[31m"
 # define GREEN		"\033[32m"
@@ -94,8 +97,6 @@ typedef struct s_env
 }	t_env;
 
 //init_env.c
-size_t	ft_strlen(const char *str);
-char	*ft_strdup(char *s);
 int		init_env(t_env *env, char **envp);
 
 //lexer_helper.c
@@ -152,8 +153,6 @@ int		trim_empty(t_argv *curt);
 
 //helper_itoa.c
 int		is_al(char c);
-int		get_len(int n);
-char	*ft_itoa(int n);
 
 //helper_free.c
 void	free_strstr(char **s);
@@ -161,9 +160,5 @@ void	free_env(t_env *env);
 void	free_tokens(t_token *head);
 void	free_redir(t_redir *head);
 void	free_argv(t_argv *head);
-
-//sort_strs.c
-void	*ft_memcpy(void *dest, const void *src, size_t n);
-char	*ft_strjoin(char const *s1, char const *s2);
 
 #endif

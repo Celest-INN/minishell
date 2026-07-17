@@ -1,7 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*   init_env.c                                                               */
-/*   环境变量初始化 + ft_strlen + ft_strdup                                    */
+/*                                                        :::      ::::::::   */
+/*   init_env.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: erzhuo <erzhuo@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/07/17 09:09:13 by erzhuo            #+#    #+#             */
+/*   Updated: 2026/07/17 09:09:15 by erzhuo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,32 +39,32 @@ int	init_env(t_env *env, char **envp)
 	return (1);
 }
 
-size_t	ft_strlen(const char *str)
-{
-	int	x;
+// size_t	ft_strlen(const char *str)
+// {
+// 	int	x;
 
-	x = 0;
-	if (!str)
-		return (0);
-	while (str[x] != '\0')
-		x++;
-	return (x);
-}
+// 	x = 0;
+// 	if (!str)
+// 		return (0);
+// 	while (str[x] != '\0')
+// 		x++;
+// 	return (x);
+// }
 
-char	*ft_strdup(char *s)
-{
-	char	*dup;
-	int		i;
+// char	*ft_strdup(char *s)
+// {
+// 	char	*dup;
+// 	int		i;
 
-	i = 0;
-	dup = (char *)malloc(sizeof(char) * (ft_strlen(s) + 1));
-	if (dup == 0)
-		return (0);
-	while (s[i] != 0)
-	{
-		dup[i] = s[i];
-		i++;
-	}
-	dup[i] = '\0';
-	return (dup);
-}
+// 	i = 0;
+// 	dup = (char *)malloc(sizeof(char) * (ft_strlen(s) + 1));
+// 	if (dup == 0)
+// 		return (0);
+// 	while (s[i] != 0)
+// 	{
+// 		dup[i] = s[i];
+// 		i++;
+// 	}
+// 	dup[i] = '\0';
+// 	return (dup);
+// }

@@ -1,7 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*   expander_helper_var.c                                                    */
-/*   无改动: $VAR 查找和替换的核心逻辑                                         */
+/*                                                        :::      ::::::::   */
+/*   expander_helper_var.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: erzhuo <erzhuo@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/07/17 09:08:28 by erzhuo            #+#    #+#             */
+/*   Updated: 2026/07/17 09:08:34 by erzhuo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +76,7 @@ char	*replace_var_helper(char **str, int i, t_env *env)
 	exit_s = ft_itoa(env->exit_s);
 	if (!exit_s)
 		return (NULL);
-	len = ft_strlen(*str) - 2 + get_len(env->exit_s) + 1;
+	len = ft_strlen(*str) - 2 + ft_numlen(env->exit_s) + 1;
 	new = var_join(str, exit_s, i, len);
 	if (!new)
 		return (free(exit_s), NULL);

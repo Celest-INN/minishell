@@ -6,51 +6,56 @@
 /*   By: erzhuo <erzhuo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 17:36:26 by erzhuo            #+#    #+#             */
-/*   Updated: 2025/11/30 18:40:39 by erzhuo           ###   ########.fr       */
+/*   Updated: 2026/07/17 08:42:51 by erzhuo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static int	ft_numlen(int n)
+int	ft_numlen(int n)
 {
-	int	len;
+	int		i;
+	long	nb;
 
-	len = 0;
-	if (n <= 0)
-		len = 1;
-	while (n)
+	i = 1;
+	nb = (long)n;
+	if (nb < 0)
 	{
-		n /= 10;
-		len++;
+		nb *= -1;
+		i = 2;
 	}
-	return (len);
+	while (nb > 9)
+	{
+		nb = nb / 10;
+		i++;
+	}
+	return (i);
 }
 
 char	*ft_itoa(int n)
 {
 	char	*str;
-	int		len;
-	long	num;
+	int		i;
+	long	m;
 
-	num = n;
-	len = ft_numlen(n);
-	str = (char *)malloc(sizeof(char) * (len + 1));
-	if (!str)
+	i = ft_numlen(n);
+	m = (long)n;
+	if (m < 0)
+		m *= -1;
+	str = (char *)malloc(sizeof(char) * (i + 1));
+	if (str == NULL)
 		return (NULL);
-	str[len] = '\0';
-	if (num < 0)
-		num = -num;
-	str[0] = '0';
-	while (num)
+	str[0] = '-';
+	str[i] = '\0';
+	i--;
+	while (m > 9)
 	{
-		len--;
-		str[len] = (num % 10) + '0';
-		num /= 10;
+		str[i] = m % 10 + '0';
+		m = m / 10;
+		i--;
 	}
-	if (n < 0)
-		str[0] = '-';
-	return (str);
+	str[i] = m + '0';
+	return (&str[0]);
 }
 // a = len--; a = len
 // a = --len; a = len - 1
