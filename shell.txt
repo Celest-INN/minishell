@@ -1,0 +1,80 @@
+
+
+
+
+
+
+typedef struct s_redir
+{
+    t_token_type    type;   //ex: INPUT    = <
+    char            *file;  //ex: "< input.txt" zhong de "input.txt"
+    struct s_redir    *next;
+}    t_redir;
+// ruguomeiyoulijiecuodehua 
+
+
+typedef struct s_argv    // command
+{
+    char            **argv;   //ex: "grep hello"-> av[0] = "grep"; av[1] = "hello" 
+    t_redir         *redir;
+    int              argc;  // nombre de av, ex: 2
+    struct s_argv    *next;
+}    t_argv;
+
+// typedef struct s_line
+// {
+//     char            *key;
+//     char            *value;
+//     struct s_line   *next;
+// }   t_line;
+
+// int main(int ac, char **av, char **envp)
+// t_line *new = malloc(sizeof(t_line));
+// envp = {"TEST=abc", "TEST2=fg", "PATH=/bin"}
+// i = 0
+// j = 4
+// strndup("TEST=abc", j - i);
+// line->value = strdup("TEST=abc"[j + 1]);
+// new->key = envp
+
+
+lines = malloc(capacity);
+size = capacity;
+realloc(capacity * 2);
+
+
+
+execve(..., ...,char **env)
+
+typedef struct s_env                         
+{
+    char **env;
+    int size; // il y a combien de line
+    int cap // max de line-> taille de malloc , quand on fait export ou unset 
+}   t_env;
+
+
+// version 2 (ercai)
+typedef struct s_env
+{
+	char   **env;
+	int    cap;
+	int    size;
+	int    exit_s;    // exit status?
+}   t_env;
+
+
+
+typedef struct s_pipex
+{
+	t_env	*env;
+	t_argv	*argv;
+	char	**lines;  // vic a dit que lines est utilise a FREE()
+	char	*path;
+    int		exit_status;
+	int		*pids;
+	size_t	len_pids;     // nombre de PID
+}	t_pipex;
+
+
+// exit status: 0 / 1 / 126 / 127
