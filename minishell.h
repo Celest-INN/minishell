@@ -26,6 +26,13 @@ typedef enum e_token_type
 	APPEND,
 }					t_token_type;
 
+typedef enum e_return_code
+{
+	RETURN_SUCCESS = 0,
+	RETURN_EXIT = -2,
+	RETURN_ERROR = -1,
+}	t_return_code;
+
 typedef struct s_redir
 {
 	t_token_type	type;
@@ -60,4 +67,6 @@ typedef struct s_pipex
 	int				fd_out;
 }					t_pipex;
 
+
+void	handle_sigint(int sig);
 #endif

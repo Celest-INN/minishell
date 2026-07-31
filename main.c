@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ziyang <ziyang@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yang <yang@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/18 11:53:56 by ziyang            #+#    #+#             */
-/*   Updated: 2026/07/18 20:13:57 by ziyang           ###   ########.fr       */
+/*   Updated: 2026/07/31 20:18:31 by yang             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int		g_sig = 0;
 
-void	handle(int sig)
+void	handle_sigint(int sig)
 {
 	ft_putchar_fd('\n', STDOUT_FILENO);
 	rl_on_new_line();
@@ -53,12 +53,15 @@ int	env_init(t_env *env, char *envp[])
 void	exec_line(t_env *env, char *line)
 {
 	t_argv	*cmds;
+	t_pipex pipex;
 
 	if (build_argv(line, env, cmds) == -1)
 		return ;
-	//open heredoc(cmds)
-	env->exit_s = exec(env, cmds);
-	//unlink heredoc(cmds)
+	pipex_init(&pipex, cmds, env);
+	
+	if (all_heredoc(cmds, pipex) == 0)
+		env->exit_s = exec(env, cmds);
+	unlink_tmp_heredoc(cmds);
 	argv_free(cmds);
 }
 
@@ -71,7 +74,7 @@ int	main(int ac, char **av, char **envp)
 	if (ac != 1)
 		return (1);
 	signal(SIGQUIT, SIG_IGN);
-	signal(SIGINT, &handle);
+	signal(SIGINT, handle_sigint);
 	if (env_init(&env, envp))
 		return (1);
 	line = readline(PROMPT);
@@ -88,3 +91,4 @@ int	main(int ac, char **av, char **envp)
 	}
 	return (env.exit_s);
 }
+
