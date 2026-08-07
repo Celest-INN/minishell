@@ -1,25 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   helper_itoa.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: erzhuo <erzhuo@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ziyang <ziyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/30 18:06:23 by erzhuo            #+#    #+#             */
-/*   Updated: 2026/07/17 08:41:17 by erzhuo           ###   ########.fr       */
+/*   Created: 2026/07/17 09:09:06 by erzhuo            #+#    #+#             */
+/*   Updated: 2026/08/07 15:14:52 by ziyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "argv_env.h"
 
-size_t	ft_strlen(const char *s)
+int	is_al(char c)
 {
-	size_t	i;
-
-	i = 0;
-	if (!s)
-		return (0);
-	while (s[i])
-		i++;
-	return (i);
+	if (c == '_')
+		return (1);
+	else if (c >= 'a' && c <= 'z')
+		return (1);
+	else if (c >= 'A' && c <= 'Z')
+		return (1);
+	else if (c >= '0' && c <= '9')
+		return (1);
+	return (0);
 }

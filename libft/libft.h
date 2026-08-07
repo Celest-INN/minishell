@@ -3,19 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: erzhuo <erzhuo@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ziyang <ziyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 18:48:32 by erzhuo            #+#    #+#             */
-/*   Updated: 2025/11/30 18:50:23 by erzhuo           ###   ########.fr       */
+/*   Updated: 2026/08/07 15:21:12 by ziyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-//otherwise it won't compile
+// otherwise it won't compile
 #ifndef LIBFT_H
 # define LIBFT_H
-# include <unistd.h> //write
-# include <stdio.h> //prinf
+# include <stdio.h>  //prinf
 # include <stdlib.h> //malloc, size_t
+# include <unistd.h> //write
 
 # ifndef SIZE_MAX
 #  define SIZE_MAX 18446744073709551615ul
@@ -48,12 +48,16 @@ char	*ft_substr(char const *s, unsigned int start, size_t len);
 char	*ft_strjoin(char const *s1, char const *s2);
 char	*ft_strtrim(char const *s1, char const *set);
 char	**ft_split(char const *s, char c);
+int		ft_numlen(int n);
 char	*ft_itoa(int n);
 char	*ft_strmapi(char const *s, char (*f)(unsigned int, char));
-void	ft_striteri(char *s, void (*f)(unsigned int, char*));
+void	ft_striteri(char *s, void (*f)(unsigned int, char *));
 void	ft_putchar_fd(char c, int fd);
 void	ft_putstr_fd(char *s, int fd);
 void	ft_putendl_fd(char *s, int fd);
 void	ft_putnbr_fd(int n, int fd);
+int		ft_strcmp(const char *s1, const char *s2);
+char	*ft_strcpy(char *dest, const char *src);
+char	*ft_ltoa(long n);
 
 #endif
