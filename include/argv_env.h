@@ -6,7 +6,7 @@
 /*   By: erzhuo <erzhuo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/17 09:06:48 by erzhuo            #+#    #+#             */
-/*   Updated: 2026/08/10 15:12:48 by erzhuo           ###   ########.fr       */
+/*   Updated: 2026/08/17 17:44:29 by erzhuo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,7 +147,7 @@ void				rm_char_helper(char **str);
 void				rm_char(t_argv *curt);
 
 // trimmer.c
-void				trim_q(char **s);
+void				trim_q(char *s);
 int					rm_empty(t_argv *curt, int i);
 int					expand_redir(t_argv *curt, t_env *env);
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ziyang <ziyang@student.42.fr>              +#+  +:+       +#+        */
+/*   By: erzhuo <erzhuo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/18 11:53:50 by ziyang            #+#    #+#             */
-/*   Updated: 2026/08/13 20:04:01 by ziyang           ###   ########.fr       */
+/*   Updated: 2026/08/17 16:29:58 by erzhuo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int	exec_cmds_aux(t_pipex *pipex, t_argv *cmds, int fdpipe[2])
 		signal(SIGQUIT, SIG_DFL);
 		close(fdpipe[0]);
 		if (open_redir(cmds->redir, pipex))
-			exit_free(pipex, 127);
+			exit_free(pipex, 1);
 		if (cmds->argc > 0)
 			exec_child(pipex, cmds);
 		exit_free(pipex, 0);

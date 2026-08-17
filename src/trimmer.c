@@ -16,20 +16,20 @@
 ** 去掉一个字符串中起分隔作用的引号 (heredoc delimiter 专用)
 ** 例: "EOF" -> EOF   'EOF' -> EOF
 */
-void	trim_q(char **s)
+void	trim_q(char *s)
 {
 	int	i[3];
 	int	n;
 
 	int_init(i, 3);
 	n = 0;
-	while ((*s)[i[0]])
+	while (s[i[0]])
 	{
-		if (!is_quote_char((*s)[i[0]], &i[1], &i[2]))
-			(*s)[n++] = (*s)[i[0]];
+		if (!is_quote_char(s[i[0]], &i[1], &i[2]))
+			s[n++] = s[i[0]];
 		i[0]++;
 	}
-	(*s)[n] = 0;
+	s[n] = 0;
 }
 
 /*

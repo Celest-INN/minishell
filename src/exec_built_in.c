@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_built_in.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ziyang <ziyang@student.42.fr>              +#+  +:+       +#+        */
+/*   By: erzhuo <erzhuo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/06 12:19:41 by ziyang            #+#    #+#             */
-/*   Updated: 2026/08/10 18:06:03 by ziyang           ###   ########.fr       */
+/*   Updated: 2026/08/17 16:30:05 by erzhuo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ int	exec_built_in(t_argv *cmd, t_pipex *pipex)
 	if (cmd->argc == 0 || is_builtin(cmd->argv[0]) == 0)
 		return (0);
 	if (open_redir(cmd->redir, pipex))
-		return (exit_free_child(127, pipex));
+		return (exit_free_child(1, pipex));
 	if (pipex->argv->next != NULL)
 	{
 		pid = fork();

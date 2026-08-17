@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   file_error.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ziyang <ziyang@student.42.fr>              +#+  +:+       +#+        */
+/*   By: erzhuo <erzhuo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/12 16:30:25 by ziyang            #+#    #+#             */
-/*   Updated: 2026/08/13 13:54:45 by ziyang           ###   ########.fr       */
+/*   Updated: 2026/08/17 17:20:16 by erzhuo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	check_file_error(char *file, int acc)
 	struct stat	st;
 
 	if (stat(file, &st) == -1)
-		return (perror("minishell"));
+		return (file_not_found(file));
 	if (S_ISDIR(st.st_mode))
 		return (file_isdirectory(file));
 	if (access(file, F_OK) != 0)
