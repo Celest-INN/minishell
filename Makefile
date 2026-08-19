@@ -19,8 +19,17 @@ SRC= main.c lexer.c lexer_helper.c \
     env_utils.c builtin_export.c builtin_pwd.c builtin_cd.c export_utils.c \
 	file_error.c heredoc_utils.c \
 
-
 OBJ= ${addprefix ${OBJ_DIR}, ${SRC:.c=.o}}
+
+TEST=minishell_test
+
+SRC_TEST= tester_ec.c lexer.c lexer_helper.c \
+	init_env.c parser.c parser_helper.c syntax_check.c \
+	expander.c rm_char.c expander_helper_var.c \
+	trimmer.c helper_itoa.c helper_free.c \
+
+
+OBJ_TEST= ${addprefix ${OBJ_DIR}, ${SRC_TEST:.c=.o}}
 
 UNAME= $(shell uname)
 ifeq ($(UNAME), Darwin)
@@ -32,6 +41,11 @@ else
 endif
 
 all: ${NAME}
+
+test: ${TEST}
+
+${TEST}: ${LIBFT} ${OBJ_TEST}
+	cc $(CFLAGS) -g -O0 -I${INC} -o $@ ${OBJ_TEST} -L. -l:${LIBFT} ${RL_LIB}
 
 ${NAME}: ${LIBFT} ${OBJ}
 	cc $(CFLAGS) -g -O0 -I${INC} -o $@ ${OBJ} -L. -l:${LIBFT} ${RL_LIB}
@@ -47,12 +61,14 @@ ${OBJ_DIR}%.o: ${SRC_DIR}%.c | ${OBJ_DIR}
 
 clean:
 	make -C ${LIBFT_DIR} clean
-	rm -f ${OBJ}
+	rm -f ${OBJ} ${OBJ_TEST}
 
 fclean: clean
 	make -C ${LIBFT_DIR} fclean
-	rm -f ${NAME}
+	rm -f ${NAME} ${TEST}
 
 re: fclean all
+
+
 
 .PHONY: all clean fclean re
