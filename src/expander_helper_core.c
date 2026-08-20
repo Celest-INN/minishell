@@ -1,16 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expander_helper_var.c                         :+:      :+:    :+:   */
+/*   expander_helper_core.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ziyang <ziyang@student.42.fr>              +#+  +:+       +#+        */
+/*   By: erzhuo <erzhuo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/07/17 09:08:47 by erzhuo            #+#    #+#             */
-/*   Updated: 2026/08/07 15:14:31 by ziyang           ###   ########.fr       */
+/*   Created: 2026/08/20 15:32:40 by erzhuo            #+#    #+#             */
+/*   Updated: 2026/08/20 15:38:52 by erzhuo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "argv_env.h"
+
+void	int_init(int *i, int n)
+{
+	int	x;
+
+	x = 0;
+	while (x < n)
+	{
+		i[x] = 0;
+		x++;
+	}
+}
 
 /*
 ** 在环境变量中查找变量名, 返回值的指针 (不拷贝)
@@ -35,25 +47,6 @@ char	*find_var(char *str, t_env *env)
 		j++;
 	}
 	return (NULL);
-}
-
-/*
-** 判断当前字符是否是"起分隔作用"的引号, 是则翻转状态并返回 1
-** 被另一种引号保护的引号返回 0 (原样保留)
-*/
-int	is_quote_char(char c, int *sq, int *dq)
-{
-	if (c == '\'' && *dq == 0)
-	{
-		*sq = !(*sq);
-		return (1);
-	}
-	if (c == '\"' && *sq == 0)
-	{
-		*dq = !(*dq);
-		return (1);
-	}
-	return (0);
 }
 
 /*
@@ -108,4 +101,24 @@ int	append_var(char **out, char **str, int *i, t_env *env)
 	num = find_var(&(*str)[i[0]], env);
 	i[0] += len;
 	return (append_n(out, num, ft_strlen(num)));
+}
+
+/*
+** 去掉一个字符串中起分隔作用的引号 (heredoc delimiter 专用)
+** 例: "EOF" -> EOF   'EOF' -> EOF
+*/
+void	trim_q(char *s)
+{
+	int	i[3];
+	int	n;
+
+	int_init(i, 3);
+	n = 0;
+	while (s[i[0]])
+	{
+		if (!is_quote_char(s[i[0]], &i[1], &i[2]))
+			s[n++] = s[i[0]];
+		i[0]++;
+	}
+	s[n] = 0;
 }

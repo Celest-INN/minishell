@@ -6,7 +6,7 @@
 /*   By: erzhuo <erzhuo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/10 15:05:56 by erzhuo            #+#    #+#             */
-/*   Updated: 2026/08/17 17:33:10 by erzhuo           ###   ########.fr       */
+/*   Updated: 2026/08/19 20:52:56 by erzhuo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,8 +79,9 @@ int	expand_str(char **str, t_env *env, int *quoted, int hd)
 
 /*
 ** heredoc 正文专用入口 (get_heredoc.c 调用)
+** 函数里声明的变量，住在一个叫栈帧（stack frame）的临时空间里。函数被调用时开一块，函数返回时整块回收。
 */
-int	expander_helper(char **str, t_env *env)
+int	expand_heredoc_line(char **str, t_env *env)
 {
 	int	quoted;
 
@@ -93,7 +94,7 @@ int	expander_helper(char **str, t_env *env)
 ** 展开后为空且从未出现过引号的参数直接删除
 ** ("$EMPTY" 留空参数, $EMPTY 不留 -> 靠 quoted 区分, 不再依赖执行顺序)
 */
-int	expander(t_argv *curt, t_env *env)
+int	expand_argv(t_argv *curt, t_env *env)
 {
 	int	i;
 	int	quoted;
@@ -133,7 +134,7 @@ int	expand_all(t_argv *curt, t_env *env)
 	if (!expand_home(curt, env))
 		return (2);
 	rm_char(curt);
-	if (!expander(curt, env))
+	if (!expand_argv(curt, env))
 		return (3);
 	if (!expand_redir(curt, env))
 		return (4);

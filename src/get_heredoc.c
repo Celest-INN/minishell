@@ -6,7 +6,7 @@
 /*   By: erzhuo <erzhuo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/06 12:20:16 by ziyang            #+#    #+#             */
-/*   Updated: 2026/08/17 17:44:55 by erzhuo           ###   ########.fr       */
+/*   Updated: 2026/08/19 20:51:04 by erzhuo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	free_lines(char **lines)
 
 int	process_line(char **line, char *lim, int fd, t_env *env)
 {
-	if (env && !expander_helper(line, env))
+	if (env && !expand_heredoc_line(line, env))
 		return (-1);
 	if (!ft_strcmp(*line, lim))
 		return (1);

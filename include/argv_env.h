@@ -6,7 +6,7 @@
 /*   By: erzhuo <erzhuo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/17 09:06:48 by erzhuo            #+#    #+#             */
-/*   Updated: 2026/08/17 17:44:29 by erzhuo           ###   ########.fr       */
+/*   Updated: 2026/08/20 15:42:53 by erzhuo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,33 +127,30 @@ t_argv				*parse_command(t_token **token);
 t_argv				*make_argv(t_token *token);
 int					build_argv(char *line, t_env *env, t_argv **out);
 
-// expander_helper_var.c
-char				*find_var(char *str, t_env *env);
-int					is_quote_char(char c, int *sq, int *dq);
-int					append_n(char **dst, char *src, int n);
-int					append_var(char **out, char **str, int *i, t_env *env);
-
 // expander.c
 int					expand_home(t_argv *curt, t_env *env);
 int					expand_str(char **str, t_env *env, int *quoted, int hd);
-int					expander_helper(char **str, t_env *env);
-int					expander(t_argv *curt, t_env *env);
+int					expand_heredoc_line(char **str, t_env *env);
+int					expand_argv(t_argv *curt, t_env *env);
 int					expand_all(t_argv *curt, t_env *env);
 
-// rm_char.c
-int					check_q(char c, int *q_s, int *q_d);
-void				int_init(int *i, int n);
+// expander_helper_rm.c
 void				rm_char_helper(char **str);
 void				rm_char(t_argv *curt);
-
-// trimmer.c
-void				trim_q(char *s);
 int					rm_empty(t_argv *curt, int i);
 int					expand_redir(t_argv *curt, t_env *env);
 
-// helper_itoa.c
+// expander_helper_core.c
+void				int_init(int *i, int n);
+char				*find_var(char *str, t_env *env);
+int					append_n(char **dst, char *src, int n);
+int					append_var(char **out, char **str, int *i, t_env *env);
+void				trim_q(char *s);
+
+// expander_helper_is.c
 int					is_al(char c);
 int					is_var_start(char c);
+int					is_quote_char(char c, int *sq, int *dq);
 
 // helper_free.c
 void				free_strstr(char **s);

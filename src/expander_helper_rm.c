@@ -1,35 +1,58 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   trimmer.c                                     :+:      :+:    :+:   */
+/*   expander_helper_rm.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ziyang <ziyang@student.42.fr>              +#+  +:+       +#+        */
+/*   By: erzhuo <erzhuo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/07/17 09:08:47 by erzhuo            #+#    #+#             */
-/*   Updated: 2026/08/07 15:14:31 by ziyang           ###   ########.fr       */
+/*   Created: 2026/08/20 15:24:48 by erzhuo            #+#    #+#             */
+/*   Updated: 2026/08/20 15:34:33 by erzhuo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "argv_env.h"
 
 /*
-** 去掉一个字符串中起分隔作用的引号 (heredoc delimiter 专用)
-** 例: "EOF" -> EOF   'EOF' -> EOF
+** 去掉 $"..." 和 $'...' 中多余的 $
+** 例: $"hello" -> "hello"
 */
-void	trim_q(char *s)
+void	rm_char_helper(char **str)
 {
-	int	i[3];
-	int	n;
+	int		i[3];
+	int		pos;
 
 	int_init(i, 3);
-	n = 0;
-	while (s[i[0]])
+	while ((*str)[i[0]])
 	{
-		if (!is_quote_char(s[i[0]], &i[1], &i[2]))
-			s[n++] = s[i[0]];
+		is_quote_char((*str)[i[0]], &i[1], &i[2]);
+		if ((*str)[i[0]] == '$')
+		{
+			if (!i[1] && !i[2] && (*str)[i[0] + 1]
+				&& ((*str)[i[0] + 1] == '\'' || (*str)[i[0] + 1] == '\"'))
+			{
+				pos = i[0];
+				while ((*str)[pos])
+				{
+					(*str)[pos] = (*str)[pos + 1];
+					pos++;
+				}
+				continue ;
+			}
+		}
 		i[0]++;
 	}
-	s[n] = 0;
+}
+
+void	rm_char(t_argv *curt)
+{
+	int	i;
+
+	i = 0;
+	while (i < curt->argc)
+	{
+		rm_char_helper(&(curt->argv[i]));
+		i++;
+	}
 }
 
 /*

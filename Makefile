@@ -11,8 +11,8 @@ LIBFT= $(LIBFT_DIR)libft.a
 
 SRC= main.c lexer.c lexer_helper.c \
 	init_env.c parser.c parser_helper.c syntax_check.c \
-	expander.c rm_char.c expander_helper_var.c \
-	trimmer.c helper_itoa.c helper_free.c \
+	expander.c expander_helper_rm.c \
+	expander_helper_core.c expander_helper_is.c helper_free.c \
 	exec_utils.c exec_built_in.c  exec_path.c \
 	exec.c get_heredoc.c builtin_exit.c  exec_check.c free.c heredoc.c \
 	builtin_echo.c builtin_unset.c builtin_env.c  env_utils_bt.c \
@@ -25,8 +25,8 @@ TEST=minishell_test
 
 SRC_TEST= tester_ec.c lexer.c lexer_helper.c \
 	init_env.c parser.c parser_helper.c syntax_check.c \
-	expander.c rm_char.c expander_helper_var.c \
-	trimmer.c helper_itoa.c helper_free.c \
+	expander.c expander_helper_rm.c \
+	expander_helper_core.c expander_helper_is.c helper_free.c \
 
 
 OBJ_TEST= ${addprefix ${OBJ_DIR}, ${SRC_TEST:.c=.o}}
