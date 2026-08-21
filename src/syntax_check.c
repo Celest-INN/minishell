@@ -6,7 +6,7 @@
 /*   By: erzhuo <erzhuo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/17 09:10:19 by erzhuo            #+#    #+#             */
-/*   Updated: 2026/08/12 14:26:29 by erzhuo           ###   ########.fr       */
+/*   Updated: 2026/08/21 19:00:14 by erzhuo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	precheck_line(char *line)
 		line++;
 	}
 	if (single_q || double_q)
-		return (258);
+		return (1);
 	return (0);
 }
 
