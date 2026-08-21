@@ -6,7 +6,7 @@
 /*   By: ziyang <ziyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/06 12:20:26 by ziyang            #+#    #+#             */
-/*   Updated: 2026/08/13 18:53:42 by ziyang           ###   ########.fr       */
+/*   Updated: 2026/08/21 19:17:23 by ziyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,8 @@ int	heredoc_terminated_signal(int fd, char *lim, char *file, t_pipex *pipex)
 		exit_free(pipex, 0);
 	}
 	waitpid(pid, &s, 0);
+	if (WEXITSTATUS(s) == 2)
+		return (130);
 	return (WEXITSTATUS(s));
 }
 
@@ -66,7 +68,7 @@ int	open_heredoc(t_redir *redir, int *stop, t_pipex *pipex)
 	(close(fd), free(redir->file), redir->file = path);
 	if (r == -1)
 		return (free(path), -1);
-	if (r == 2)
+	if (r == 130)
 		return (*stop = 1, r);
 	if (r == 1)
 		return (1);
