@@ -13,7 +13,7 @@ Our implementation supports:
 - An interactive prompt built on the **readline** library, with command history.
 - **Pipes** (`|`) chaining any number of simple commands together.
 - **Redirections**: input (`<`), output (`>`), append (`>>`) and heredoc (`<<`).
-- **Environment variable expansion** (`$VAR`, `$?`) inside single/double quotes according to shell quoting rules.
+- **Environment variable expansion**  inside single/double quotes according to shell quoting rules.
 - The following **builtins**, implemented internally (not calling `/bin/...`):
   - `cd`
   - `pwd`
@@ -25,7 +25,12 @@ Our implementation supports:
 - Correct **exit status** propagation (`$?`), including for signals (SIGINT/SIGQUIT).
 - Signal handling matching bash's interactive behavior (`Ctrl-C`, `Ctrl-D`, `Ctrl-\`).
 - Execution of external binaries found via `PATH`, or via relative/absolute paths.
-
+- The input line is turned into commands through a small **parsing pipeline**:
+  - **Lexer** (`lexer.c`, `lexer_helper.c`) — splits the line into tokens (`WORD`, `|`, `<`, `>`, `<<`, `>>`); quotes are scanned as a block, so spaces and operators inside them stay literal.
+  - **Syntax check** (`syntax_check.c`) — rejects invalid token sequences (leading `|`, trailing operator, `| |`, redirection with no target) and unclosed quotes, setting `$?` to `2`.
+  - **Parser** (`parser.c`, `parser_helper.c`) — groups tokens into a list of commands split on `|`, each with a NULL-terminated `argv` and an ordered list of redirections.
+  - **Expander** (`expander.c`, `expander_helper_core.c`, `expander_helper_is.c`, `expander_helper_rm.c`) — one left-to-right pass per string doing `$VAR` / `$?` substitution and quote removal together; expanded text is never re-scanned, so a value's own quotes and `$` stay literal.
+  
 ## Instructions
 
 ### Compilation
@@ -50,13 +55,7 @@ make re      # fclean + make
 
 ```bash
 ./minishell
-```— echo (option -n only)
-— exit
-— env (with no options or arguments)
-— export (with no options)
-— unset (with no options)
-— cd
-— pwd
+```
 
 This launches an interactive prompt (`minishell> `). Type any shell command as you would in `bash`:
 
