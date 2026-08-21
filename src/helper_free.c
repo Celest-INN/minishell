@@ -6,21 +6,11 @@
 /*   By: erzhuo <erzhuo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/17 09:08:59 by erzhuo            #+#    #+#             */
-/*   Updated: 2026/07/17 09:09:02 by erzhuo           ###   ########.fr       */
+/*   Updated: 2026/08/21 18:12:41 by erzhuo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "argv_env.h"
-
-void	free_strstr(char **s)
-{
-	int	i;
-
-	i = 0;
-	while (s[i])
-		free(s[i++]);
-	free(s);
-}
 
 void	free_env(t_env *env)
 {
