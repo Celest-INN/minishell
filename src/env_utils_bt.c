@@ -6,7 +6,7 @@
 /*   By: ziyang <ziyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/06 12:19:35 by ziyang            #+#    #+#             */
-/*   Updated: 2026/08/07 14:51:34 by ziyang           ###   ########.fr       */
+/*   Updated: 2026/08/13 17:39:49 by ziyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	var_name_len(char *s)
 	int	i;
 
 	i = 0;
-	while (s[i] && s[i] != '=')
+	while (s[i] && s[i] != '=' && s[i] != '+')
 		i++;
 	return (i);
 }
@@ -31,7 +31,8 @@ int	env_var_index(t_env *env, char *v, int len)
 		return (0);
 	while (i < env->size)
 	{
-		if ((ft_strncmp(v, env->env[i], len) == 0) && env->env[i][len] == '=')
+		if ((ft_strncmp(v, env->env[i], len) == 0)
+			&& (env->env[i][len] == '=' || env->env[i][len] == '\0'))
 			return (i);
 		i++;
 	}
@@ -61,8 +62,6 @@ int	env_set(t_env *env, char *v)
 	int	len;
 
 	len = var_name_len(v);
-	if (v[len] == '\0')
-		return (0);
 	index = env_var_index(env, v, len);
 	if (index == env->size)
 	{

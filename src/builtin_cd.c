@@ -6,7 +6,7 @@
 /*   By: ziyang <ziyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/18 11:53:37 by ziyang            #+#    #+#             */
-/*   Updated: 2026/08/06 12:18:35 by ziyang           ###   ########.fr       */
+/*   Updated: 2026/08/13 19:18:02 by ziyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ int	builtin_cd(t_argv *cmd, t_pipex *pipex)
 	if (cmd->argc > 2)
 	{
 		ft_putstr_fd("minishell: cd: too many arguments\n", STDERR_FILENO);
-		return (exit_free_child(1, pipex));
+		return (exit_free_child(2, pipex));
 	}
 	if (cmd->argc == 1)
 	{

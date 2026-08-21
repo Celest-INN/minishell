@@ -1,26 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   helper_itoa.c                                      :+:      :+:    :+:   */
+/*   heredoc_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ziyang <ziyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/07/17 09:09:06 by erzhuo            #+#    #+#             */
-/*   Updated: 2026/08/07 15:14:52 by ziyang           ###   ########.fr       */
+/*   Created: 2026/08/13 17:42:20 by ziyang            #+#    #+#             */
+/*   Updated: 2026/08/13 18:48:58 by ziyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "argv_env.h"
+#include "minishell.h"
 
-int	is_al(char c)
+void	heredoc_sighandler(int sig)
 {
-	if (c == '_')
-		return (1);
-	else if (c >= 'a' && c <= 'z')
-		return (1);
-	else if (c >= 'A' && c <= 'Z')
-		return (1);
-	else if (c >= '0' && c <= '9')
-		return (1);
-	return (0);
+	(void) sig;
+	g_sig = sig;
+	close(0);
 }

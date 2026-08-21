@@ -6,21 +6,11 @@
 /*   By: ziyang <ziyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/06 12:19:41 by ziyang            #+#    #+#             */
-/*   Updated: 2026/08/07 14:51:45 by ziyang           ###   ########.fr       */
+/*   Updated: 2026/08/21 15:25:28 by ziyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static int	exec_exit(t_argv *cmd, t_pipex *pipex)
-{
-	int	result;
-
-	result = builtin_exit(cmd, pipex);
-	if (result)
-		return (-2);
-	return (0);
-}
 
 int	exec_build_in_child(t_argv *cmd, t_pipex *pipex)
 {
@@ -37,7 +27,26 @@ int	exec_build_in_child(t_argv *cmd, t_pipex *pipex)
 	if (!ft_strcmp(cmd->argv[0], "env"))
 		return (builtin_env(cmd, pipex));
 	if (!ft_strcmp(cmd->argv[0], "exit"))
-		return (exec_exit(cmd, pipex));
+		return (builtin_exit(cmd, pipex));
+	return (0);
+}
+
+int	is_builtin(char *cmd)
+{
+	if (!ft_strcmp(cmd, "cd"))
+		return (1);
+	if (!ft_strcmp(cmd, "pwd"))
+		return (1);
+	if (!ft_strcmp(cmd, "echo"))
+		return (1);
+	if (!ft_strcmp(cmd, "export"))
+		return (1);
+	if (!ft_strcmp(cmd, "unset"))
+		return (1);
+	if (!ft_strcmp(cmd, "env"))
+		return (1);
+	if (!ft_strcmp(cmd, "exit"))
+		return (1);
 	return (0);
 }
 
@@ -47,6 +56,10 @@ int	exec_built_in(t_argv *cmd, t_pipex *pipex)
 	int	pid_builtin;
 	int	builtin_status;
 
+	if (cmd->argc == 0 || is_builtin(cmd->argv[0]) == 0)
+		return (0);
+	if (open_redir(cmd->redir, pipex))
+		return (exit_free_child(1, pipex));
 	if (pipex->argv->next != NULL)
 	{
 		pid = fork();
@@ -54,11 +67,14 @@ int	exec_built_in(t_argv *cmd, t_pipex *pipex)
 			return (-1);
 		if (pid == 0)
 		{
+			signal(SIGINT, SIG_DFL);
 			pid_builtin = exec_build_in_child(cmd, pipex);
 			waitpid(pid_builtin, &builtin_status, 0);
 			exit_free(pipex, WEXITSTATUS(builtin_status));
 		}
-		return (pid);
+		return (close_fd(pipex->fd_in), close_fd(pipex->fd_out), pid);
 	}
-	return (exec_build_in_child(cmd, pipex));
+	pid = exec_build_in_child(cmd, pipex);
+	(close_fd(pipex->fd_in), close_fd(pipex->fd_out));
+	return (pid);
 }

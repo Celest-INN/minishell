@@ -6,7 +6,7 @@
 /*   By: ziyang <ziyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/06 12:19:17 by ziyang            #+#    #+#             */
-/*   Updated: 2026/08/07 14:51:14 by ziyang           ###   ########.fr       */
+/*   Updated: 2026/08/10 16:29:20 by ziyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int	builtin_exit(t_argv *argv, t_pipex *pipex)
 	if (argv->argc > 2)
 	{
 		ft_putstr_fd("minishell: exit: too many arguments\n", STDERR_FILENO);
-		return (0);
+		return (exit_free_child(2, pipex));
 	}
 	if (argv->argc == 2 && !is_number(argv->argv[1]))
 	{
@@ -48,5 +48,6 @@ int	builtin_exit(t_argv *argv, t_pipex *pipex)
 	}
 	if (argv->argc == 2)
 		exit_free(pipex, (ft_atoi(argv->argv[1]) % 256 + 256) % 256);
+	exit_free(pipex, pipex->env->exit_s);
 	return (0);
 }

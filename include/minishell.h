@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ziyang <ziyang@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/08/09 19:54:54 by ziyang            #+#    #+#             */
+/*   Updated: 2026/08/17 13:50:34 by ziyang           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
@@ -16,9 +28,11 @@
 # include <termios.h>
 # include <unistd.h>
 
-# define PROMPT "minishell>"
+# define PROMPT "minishell> "
 
 # define BUFFER_SIZE 1024
+
+extern int	g_sig;
 
 typedef struct s_pipex
 {
@@ -33,12 +47,11 @@ typedef struct s_pipex
 
 void		handle_sigint(int sig);
 int			builtin_exit(t_argv *argv, t_pipex *pipex);
-char		*read_line(char *prompt);
 int			builtin_cd(t_argv *cmd, t_pipex *pipex);
 int			exec_built_in(t_argv *cmd, t_pipex *pipex);
 int			path_nopermission_execute(char *cmd);
 int			path_cmd_nofound(char *cmd);
-int			path_checker(char *path);
+int			path_checker(char *path, t_env *env);
 int			find_binary(t_env *env, char **argv);
 void		pipex_init(t_pipex *pipex, t_argv *cmd, t_env *env);
 void		wait_child(t_pipex *pipex);
@@ -73,5 +86,8 @@ int			var_name_len(char *s);
 int			check_identifier(char *str, int *append);
 int			print_export_list(t_env *env, int fd);
 int			export_cmp(char *a, char *b);
+void		close_fd(int fd);
+void		check_file_error(char *file, int acc);
+void		heredoc_sighandler(int sig);
 
 #endif

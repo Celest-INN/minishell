@@ -6,11 +6,12 @@
 /*   By: ziyang <ziyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/18 11:53:53 by ziyang            #+#    #+#             */
-/*   Updated: 2026/08/06 12:20:11 by ziyang           ###   ########.fr       */
+/*   Updated: 2026/08/09 19:53:34 by ziyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <string.h>
 
 void	free_pointer(char **s)
 {
@@ -27,10 +28,21 @@ void	free_pointer(char **s)
 
 void	argv_free(t_argv *cmd)
 {
+	t_redir	*redir;
+	t_redir	*tmp;
+
 	if (cmd == NULL)
 		return ;
 	free_pointer(cmd->argv);
 	argv_free(cmd->next);
+	redir = cmd->redir;
+	while (redir != NULL)
+	{
+		tmp = redir;
+		free(redir->file);
+		redir = redir->next;
+		free(tmp);
+	}
 	free(cmd);
 }
 

@@ -6,7 +6,7 @@
 /*   By: ziyang <ziyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/18 11:54:11 by ziyang            #+#    #+#             */
-/*   Updated: 2026/08/06 12:20:00 by ziyang           ###   ########.fr       */
+/*   Updated: 2026/08/13 20:14:55 by ziyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,28 @@ char	*path_append(char *begin, char *end, char *name)
 	return (path);
 }
 
+int	is_relative_path(char *path)
+{
+	if (path[0] == '.' && path[1] == '\0')
+		return (1);
+	if (path[0] == '.' && path[1] == '.' && path[2] == '\0')
+		return (1);
+	if (path[0] == '.' && path[1] == '/')
+		return (1);
+	if (path[0] == '/')
+		return (1);
+	return (0);
+}
+
+char	*make_relative_path(char *cmd)
+{
+	char	*tmp;
+
+	tmp = ft_strjoin("./", cmd);
+	free(cmd);
+	return (tmp);
+}
+
 int	find_binary(t_env *env, char **argv)
 {
 	char	*path;
@@ -52,9 +74,11 @@ int	find_binary(t_env *env, char **argv)
 	char	*begin;
 	char	*end;
 
-	path = find_path(env);
-	if (path == NULL)
+	if (argv[0][0] == '\0' || is_relative_path(argv[0]))
 		return (0);
+	path = find_path(env);
+	if (path == NULL || path[0] == '\0')
+		return (argv[0] = make_relative_path(argv[0]), 0);
 	begin = path;
 	buf = NULL;
 	while (begin != NULL)
@@ -65,11 +89,8 @@ int	find_binary(t_env *env, char **argv)
 		if (buf == NULL)
 			return (-1);
 		if (access(buf, X_OK) == 0)
-		{
-			(free(argv[0]), argv[0] = ft_strdup(buf));
-			return (0);
-		}
+			return (free(argv[0]), argv[0] = ft_strdup(buf), free(buf), 0);
 		begin = end;
 	}
-	return (0);
+	return (free(buf), 0);
 }

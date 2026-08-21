@@ -6,7 +6,7 @@
 /*   By: ziyang <ziyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/06 12:19:28 by ziyang            #+#    #+#             */
-/*   Updated: 2026/08/07 15:12:44 by ziyang           ###   ########.fr       */
+/*   Updated: 2026/08/10 16:48:25 by ziyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,12 +47,11 @@ int	builtin_unset(t_argv *cmd, t_pipex *pipex)
 	if (cmd == NULL || pipex == NULL || pipex->env == NULL)
 		return (1);
 	if (cmd->argc == 1)
-		return (pipex->exit_status = 0, 0);
+		return (exit_free_child(0, pipex));
 	if (cmd->argv[1][0] == '-')
 	{
 		unset_option(cmd->argv[1]);
-		pipex->exit_status = 2;
-		return (2);
+		return (exit_free_child(2, pipex));
 	}
 	i = 0;
 	while (++i < cmd->argc)
@@ -62,6 +61,5 @@ int	builtin_unset(t_argv *cmd, t_pipex *pipex)
 		if (index != pipex->env->size)
 			remove_env_var(pipex->env, index);
 	}
-	pipex->exit_status = 0;
-	return (0);
+	return (exit_free_child(0, pipex));
 }

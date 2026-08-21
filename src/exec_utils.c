@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yang <yang@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ziyang <ziyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/18 11:54:16 by ziyang            #+#    #+#             */
-/*   Updated: 2026/08/06 18:39:46 by yang             ###   ########.fr       */
+/*   Updated: 2026/08/13 13:56:35 by ziyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,18 @@ void	wait_child(t_pipex *pipex)
 	while (pid != -1)
 	{
 		if (pid == pipex->pid)
-			pipex->exit_status = WEXITSTATUS(s);
+		{
+			if (WIFSIGNALED(s))
+			{
+				if (WTERMSIG(s) == SIGINT)
+					ft_putchar_fd('\n', STDOUT_FILENO);
+				else if (WTERMSIG(s) == SIGQUIT)
+					ft_putstr_fd("Quit (core dumped)\n", STDERR_FILENO);
+				pipex->exit_status = 128 + WTERMSIG(s);
+			}
+			else
+				pipex->exit_status = WEXITSTATUS(s);
+		}
 		pid = wait(&s);
 	}
 }
@@ -50,22 +61,22 @@ int	check_redir(t_redir *redir, t_pipex *pipex)
 	if (redir->type == INPUT || redir->type == HEREDOC)
 	{
 		tmp = open(redir->file, O_RDONLY);
-		if (tmp == -1)
-			return (-1);
+		if (tmp == -1 && redir->type != HEREDOC)
+			return (check_file_error(redir->file, R_OK), -1);
 		update_fd(&pipex->fd_in, tmp);
 	}
 	if (redir->type == OUTPUT)
 	{
 		tmp = open(redir->file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		if (tmp == -1)
-			return (-1);
+			return (check_file_error(redir->file, W_OK), -1);
 		update_fd(&pipex->fd_out, tmp);
 	}
 	if (redir->type == APPEND)
 	{
 		tmp = open(redir->file, O_WRONLY | O_CREAT | O_APPEND, 0644);
 		if (tmp == -1)
-			return (-1);
+			return (check_file_error(redir->file, W_OK), -1);
 		update_fd(&pipex->fd_out, tmp);
 	}
 	return (0);

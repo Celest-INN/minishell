@@ -6,7 +6,7 @@
 /*   By: erzhuo <erzhuo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/17 09:10:19 by erzhuo            #+#    #+#             */
-/*   Updated: 2026/07/17 09:10:22 by erzhuo           ###   ########.fr       */
+/*   Updated: 2026/08/12 14:26:29 by erzhuo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ int	syntax_error(char *line, t_token *token, t_env *env)
 	if (precheck_line(line) != 0)
 	{
 		env->exit_s = 2;
-		write(2, "syntax error: unclosed quote\n", 28);
+		write(2, "syntax error: unclosed quote\n", 29);
 		return (1);
 	}
 	x = syntax_check(token);

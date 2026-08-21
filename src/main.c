@@ -6,11 +6,12 @@
 /*   By: ziyang <ziyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/18 11:53:56 by ziyang            #+#    #+#             */
-/*   Updated: 2026/08/06 12:21:10 by ziyang           ###   ########.fr       */
+/*   Updated: 2026/08/17 13:50:17 by ziyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <unistd.h>
 
 int		g_sig = 0;
 
@@ -23,45 +24,42 @@ void	handle_sigint(int sig)
 	g_sig = sig;
 }
 
-int	env_init(t_env *env, char *envp[])
-{
-	size_t	i;
-
-	i = 0;
-	while (envp[i])
-		i++;
-	env->cap = i * 2;
-	env->size = i;
-	env->env = malloc(sizeof(char *) * env->cap);
-	if (env->env == NULL)
-		return (-1);
-	i = 0;
-	while (envp[i])
-	{
-		env->env[i] = ft_strdup(envp[i]);
-		if (env->env[i] == NULL)
-		{
-			free_pointer(env->env);
-			return (-1);
-		}
-		i++;
-	}
-	env->env[i] = NULL;
-	return (0);
-}
-
 void	exec_line(t_env *env, char *line)
 {
 	t_argv	*cmds;
 	t_pipex	pipex;
+	int		r;
 
 	if (build_argv(line, env, &cmds) == -1)
 		return ;
 	pipex_init(&pipex, cmds, env);
-	if (all_heredoc(cmds, &pipex) == 0)
+	r = all_heredoc(cmds, &pipex);
+	if (r == 0)
 		env->exit_s = exec(cmds, &pipex);
+	else
+	{
+		if (WIFSIGNALED(r))
+			env->exit_s = 128 + WTERMSIG(r);
+		else if (r >= 0)
+			env->exit_s = WEXITSTATUS(r);
+		else
+			env->exit_s = 1;
+	}
 	unlink_tmp_heredoc(cmds);
 	argv_free(cmds);
+}
+
+int	check_tty(void)
+{
+	if (isatty(STDIN_FILENO) == 0
+		|| isatty(STDOUT_FILENO) == 0
+		|| isatty(STDERR_FILENO) == 0)
+	{
+		ft_putstr_fd("minishell: interactive terminal required\n",
+			STDERR_FILENO);
+		return (-1);
+	}
+	return (0);
 }
 
 int	main(int ac, char **av, char **envp)
@@ -70,11 +68,11 @@ int	main(int ac, char **av, char **envp)
 	t_env	env;
 
 	(void)av;
-	if (ac != 1)
+	if (ac != 1 || check_tty() == -1)
 		return (1);
 	signal(SIGQUIT, SIG_IGN);
 	signal(SIGINT, handle_sigint);
-	if (env_init(&env, envp))
+	if (init_env(&env, envp) == 0)
 		return (1);
 	line = readline(PROMPT);
 	if (g_sig == SIGINT)
@@ -85,9 +83,9 @@ int	main(int ac, char **av, char **envp)
 		add_history(line);
 		exec_line(&env, line);
 		line = readline(PROMPT);
-		if (g_sig == SIGINT)
-			env.exit_s = 130;
+		if (g_sig)
+			env.exit_s = 128 + g_sig;
 	}
+	env_free(&env);
 	return (env.exit_s);
 }
-

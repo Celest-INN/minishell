@@ -6,7 +6,7 @@
 /*   By: ziyang <ziyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/17 09:09:13 by erzhuo            #+#    #+#             */
-/*   Updated: 2026/08/07 15:15:02 by ziyang           ###   ########.fr       */
+/*   Updated: 2026/08/10 17:53:23 by ziyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	init_env(t_env *env, char **envp)
 	env->cap = 8;
 	while (envp[i++])
 		env->cap = i * 2;
-	env->env = malloc(sizeof(char *) * env->cap);
+	env->env = malloc(sizeof(char *) * (env->cap + 1));
 	if (!env->env)
 		return (free_env(env), 0);
 	i = 0;
@@ -31,9 +31,15 @@ int	init_env(t_env *env, char **envp)
 		env->env[i] = ft_strdup(envp[i]);
 		if (!env->env[i])
 			return (free_env(env), 0);
-		i++;
+		env->size = i++;
 	}
 	env->env[i] = NULL;
 	env->size = i;
 	return (1);
+}
+
+void	close_fd(int fd)
+{
+	if (fd != -1)
+		close(fd);
 }

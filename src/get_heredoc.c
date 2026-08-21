@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_heredoc.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ziyang <ziyang@student.42.fr>              +#+  +:+       +#+        */
+/*   By: erzhuo <erzhuo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/06 12:20:16 by ziyang            #+#    #+#             */
-/*   Updated: 2026/08/07 15:22:42 by ziyang           ###   ########.fr       */
+/*   Updated: 2026/08/19 20:51:04 by erzhuo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,10 @@ void	free_lines(char **lines)
 
 int	process_line(char **line, char *lim, int fd, t_env *env)
 {
+	if (env && !expand_heredoc_line(line, env))
+		return (-1);
 	if (!ft_strcmp(*line, lim))
 		return (1);
-	if (env && !expander_helper(line, env))
-		return (-1);
 	ft_putendl_fd(*line, fd);
 	return (0);
 }
@@ -79,11 +79,10 @@ int	get_heredoc(int fdhd, char *lim, t_env *env)
 	lim2 = ft_strdup(lim);
 	if (!lim2)
 		return (close(fdhd), -1);
-	trim_q(&lim);
+	trim_q(lim);
 	if (ft_strcmp(lim, lim2) != 0)
 		env = NULL;
-	line = read_line("> ");
-	// line = readline("> ")
+	line = readline("> ");
 	while (line)
 	{
 		r = check_lines(line, lim, fdhd, env);
@@ -91,10 +90,11 @@ int	get_heredoc(int fdhd, char *lim, t_env *env)
 			return (free(lim2), close(fdhd), -1);
 		if (r == 1)
 			break ;
-		line = read_line("> ");
-		// line = readline("> ");
+		line = readline("> ");
 	}
-	if (!line)
+	if (g_sig != 0)
+		(ft_putchar_fd('\n', 2), rl_on_new_line());
+	if (!line && g_sig == 0)
 		heredoc_warning(lim);
 	return (free(lim2), close(fdhd), 0);
 }
