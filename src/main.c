@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ziyang <ziyang@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yang <yang@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/18 11:53:56 by ziyang            #+#    #+#             */
-/*   Updated: 2026/08/17 13:50:17 by ziyang           ###   ########.fr       */
+/*   Updated: 2026/08/21 19:23:52 by yang             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,8 @@ void	exec_line(t_env *env, char *line)
 		env->exit_s = exec(cmds, &pipex);
 	else
 	{
-		if (WIFSIGNALED(r))
-			env->exit_s = 128 + WTERMSIG(r);
+		if (r==130)
+			env->exit_s = 130;
 		else if (r >= 0)
 			env->exit_s = WEXITSTATUS(r);
 		else
