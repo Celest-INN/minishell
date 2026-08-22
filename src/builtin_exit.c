@@ -6,7 +6,7 @@
 /*   By: ziyang <ziyang@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/06 12:19:17 by ziyang            #+#    #+#             */
-/*   Updated: 2026/08/10 16:29:20 by ziyang           ###   ########.fr       */
+/*   Updated: 2026/08/22 18:18:37 by ziyang           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,6 @@ static void	print_error(char *arg)
 
 int	builtin_exit(t_argv *argv, t_pipex *pipex)
 {
-	if (pipex->fd_in != -1 && pipex->fd_in != STDIN_FILENO)
-		close(pipex->fd_in);
-	if (pipex->fd_out != -1 && pipex->fd_out != STDOUT_FILENO)
-		close(pipex->fd_out);
 	if (argv->argc > 2)
 	{
 		ft_putstr_fd("minishell: exit: too many arguments\n", STDERR_FILENO);
