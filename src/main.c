@@ -6,7 +6,7 @@
 /*   By: yang <yang@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/18 11:53:56 by ziyang            #+#    #+#             */
-/*   Updated: 2026/08/21 19:23:52 by yang             ###   ########.fr       */
+/*   Updated: 2026/08/22 18:48:22 by yang             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,11 @@ void	exec_line(t_env *env, char *line)
 		return ;
 	pipex_init(&pipex, cmds, env);
 	r = all_heredoc(cmds, &pipex);
-	if (r == 0)
+	if (r == 0)   // si all_heredoc a pas de problem.
 		env->exit_s = exec(cmds, &pipex);
 	else
 	{
-		if (r==130)
+		if (r == 130)
 			env->exit_s = 130;
 		else if (r >= 0)
 			env->exit_s = WEXITSTATUS(r);
