@@ -6,7 +6,7 @@
 /*   By: erzhuo <erzhuo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/17 09:09:53 by erzhuo            #+#    #+#             */
-/*   Updated: 2026/07/17 09:09:55 by erzhuo           ###   ########.fr       */
+/*   Updated: 2026/08/22 19:05:57 by erzhuo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ t_argv	*parse_command(t_token **token)
 	if (!node)
 		return (NULL);
 	node->next = NULL;
+	node->argv = NULL;
+	node->redir = NULL;
 	node->argc = count_cmd_argc(start);
 	if (build_redirs(start, &node->redir) < 0)
 		return (free_argv(node), NULL);
