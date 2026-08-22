@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_built_in.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ziyang <ziyang@student.42.fr>              +#+  +:+       +#+        */
+/*   By: erzhuo <erzhuo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/06 12:19:41 by ziyang            #+#    #+#             */
-/*   Updated: 2026/08/21 15:25:28 by ziyang           ###   ########.fr       */
+/*   Updated: 2026/08/22 20:08:10 by erzhuo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int	is_builtin(char *cmd)
 
 int	exec_built_in(t_argv *cmd, t_pipex *pipex)
 {
-	int	pid;
+	int	p;
 	int	pid_builtin;
 	int	builtin_status;
 
@@ -62,19 +62,19 @@ int	exec_built_in(t_argv *cmd, t_pipex *pipex)
 		return (exit_free_child(1, pipex));
 	if (pipex->argv->next != NULL)
 	{
-		pid = fork();
-		if (pid == -1)
+		p = fork();
+		if (p == -1)
 			return (-1);
-		if (pid == 0)
+		if (p == 0)
 		{
 			signal(SIGINT, SIG_DFL);
 			pid_builtin = exec_build_in_child(cmd, pipex);
 			waitpid(pid_builtin, &builtin_status, 0);
 			exit_free(pipex, WEXITSTATUS(builtin_status));
 		}
-		return (close_fd(pipex->fd_in), close_fd(pipex->fd_out), pid);
+		return (update_fd(&pipex->fd_in, -1), update_fd(&pipex->fd_out, -1), p);
 	}
-	pid = exec_build_in_child(cmd, pipex);
-	(close_fd(pipex->fd_in), close_fd(pipex->fd_out));
-	return (pid);
+	p = exec_build_in_child(cmd, pipex);
+	(update_fd(&pipex->fd_in, -1), update_fd(&pipex->fd_out, -1));
+	return (p);
 }

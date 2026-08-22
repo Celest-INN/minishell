@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ziyang <ziyang@student.42.fr>              +#+  +:+       +#+        */
+/*   By: erzhuo <erzhuo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/09 19:54:54 by ziyang            #+#    #+#             */
-/*   Updated: 2026/08/17 13:50:34 by ziyang           ###   ########.fr       */
+/*   Updated: 2026/08/22 20:09:07 by erzhuo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,5 +89,6 @@ int			export_cmp(char *a, char *b);
 void		close_fd(int fd);
 void		check_file_error(char *file, int acc);
 void		heredoc_sighandler(int sig);
+void		update_fd(int *oldfd, int newfd);
 
 #endif
